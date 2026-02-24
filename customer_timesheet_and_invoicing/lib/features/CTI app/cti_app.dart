@@ -16,6 +16,7 @@ class CTIApp extends StatelessWidget {
         primaryColorDark: Color.fromRGBO(26, 26, 26, 100),
         primaryColorLight: Color.fromRGBO(74, 74, 74, 100),
         highlightColor: Color.fromRGBO(187, 187, 187, 1),
+        hintColor: Color.fromRGBO(255, 0, 0, 1),
         textTheme: TextTheme(
           titleLarge: TextStyle(
             color: Colors.white,
@@ -26,7 +27,7 @@ class CTIApp extends StatelessWidget {
           )
         )
       ),
-      home: isSetupComplete ? HomePage() : Setup(),
+      home: isSetupComplete ? HomePage() : SetupPage(),
     );
   }
 }
