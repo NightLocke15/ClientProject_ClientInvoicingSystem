@@ -3,11 +3,15 @@ import 'package:flutter/material.dart';
 class CustomTextInput extends StatelessWidget {
   final String labelName;
   final String hintText;
+  final bool password;
+  final TextEditingController inputController;
 
-  const CustomTextInput({
+  CustomTextInput({
     super.key, 
     required this.labelName, 
-    required this.hintText
+    required this.hintText,
+    required this.password,
+    required this.inputController
   });
   
   @override
@@ -40,6 +44,7 @@ class CustomTextInput extends StatelessWidget {
                 ]
               ),
               child: TextField(
+                controller: inputController,
                 style: TextStyle(
                   height: 1.0,
                   color: Theme.of(context).textTheme.bodySmall?.color,
@@ -59,6 +64,7 @@ class CustomTextInput extends StatelessWidget {
                     color: const Color.fromARGB(255, 104, 104, 104),
                   )
                 ),
+                obscureText: password,
               ),
             ),
           ),

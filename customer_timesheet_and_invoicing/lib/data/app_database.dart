@@ -37,7 +37,8 @@ class AppDatabase {
         business_name TEXT,
         number INTEGER,
         email TEXT,
-        vat_registered TEXT
+        recent_invoice INTEGER,
+        vat_registered TEXT,
         vat_number INTEGER,
         vat_percentage INTEGER,
         street_address TEXT,

@@ -9,30 +9,38 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  var pageIndex = 0;
-  var pageTitle = '';
+  int pageIndex = 0;
+  String pageTitle = "Timesheet";
+
+  void changePage(int pageNum, String pageName) {
+    setState(() {
+      pageIndex = pageNum;
+      pageTitle = pageName;
+    });    
+    Navigator.pop(context); 
+  }
 
   @override
   Widget build(BuildContext context) {
-    // Widget page;
-    // switch (pageIndex) {
-    //   case 0:
-    //     page = Timesheet();
-    //     break;
-    //   case 1:
-    //     page = Clients();
-    //     break;
-    //   case 2: 
-    //     page = Settings();
-    //     break;
-    //   default:
-    //     throw UnimplementedError('No page for selected index.');
-    // }
+    Widget page;
+    switch (pageIndex) {
+      case 0:
+        page = Timesheet();        
+        break;
+      case 1:
+        page = Timesheet();
+        break;
+      case 2: 
+        page = Timesheet();        
+        break;
+      default:
+        throw UnimplementedError('No page for selected index.');
+    }
     return Scaffold(
       appBar: AppBar(
         title: Padding(
           padding: const EdgeInsets.all(8.0),
-          child: Text('Timesheet'),
+          child: Text(pageTitle),
         ),
         backgroundColor: Theme.of(context).primaryColor,
         titleTextStyle: TextStyle(
@@ -42,6 +50,7 @@ class _HomePageState extends State<HomePage> {
         iconTheme: IconThemeData(
           color: Colors.white,
         ),
+        automaticallyImplyLeading: false,
       ),
       endDrawer: Drawer(
         backgroundColor: Theme.of(context).primaryColor,
@@ -56,32 +65,26 @@ class _HomePageState extends State<HomePage> {
           children: [
             ListTile(
               title: const Text('Home'),
-              onTap: () {
-            
-              },
+              onTap: () => changePage(0, "Timesheet"),
               textColor: Theme.of(context).textTheme.bodySmall?.color,
               hoverColor: Theme.of(context).primaryColorDark,
             ),
             ListTile(
               title: const Text('Clients'),
-              onTap: () {
-            
-              },
+              onTap: () => changePage(1, "Clients"),
               textColor: Theme.of(context).textTheme.bodySmall?.color,
               hoverColor: Theme.of(context).primaryColorDark,
             ),
             ListTile(
               title: const Text('Settings'),
-              onTap: () {
-            
-              },
+              onTap: () => changePage(2, "Settings"),
               textColor: Theme.of(context).textTheme.bodySmall?.color,
               hoverColor: Theme.of(context).primaryColorDark,
             ),              
           ]
         ),
       ),
-      body: Timesheet(),
+      body: page,
       backgroundColor: Theme.of(context).primaryColor,
     );
   }

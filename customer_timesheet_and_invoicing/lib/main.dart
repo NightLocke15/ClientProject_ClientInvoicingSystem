@@ -18,9 +18,9 @@ void main() async {
 
 Future<bool> _isProfileCreated(Database db) async {
   final result = await db.query(
-    'meta',
-    where: 'key = ?',
-    whereArgs: ['profile_created'],
+    'user_profile',
+    where: 'id = ?',
+    whereArgs: [1],
   );
   return result.isNotEmpty;
 }

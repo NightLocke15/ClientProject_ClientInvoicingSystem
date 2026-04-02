@@ -1,4 +1,4 @@
-import 'package:customer_timesheet_and_invoicing/features/homepage/home_page.dart';
+import 'package:customer_timesheet_and_invoicing/features/auth/login_page.dart';
 import 'package:customer_timesheet_and_invoicing/features/setup/setup_page.dart';
 import 'package:flutter/material.dart';
 
@@ -27,7 +27,7 @@ class CTIApp extends StatelessWidget {
           )
         )
       ),
-      home: isSetupComplete ? HomePage() : SetupPage(),
+      home: isSetupComplete ? LoginPage() : SetupPage(),
     );
   }
 }

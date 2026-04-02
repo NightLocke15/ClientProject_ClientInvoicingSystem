@@ -1,17 +1,50 @@
 import 'package:customer_timesheet_and_invoicing/core/text_input.dart';
 import 'package:flutter/material.dart';
 
-class SetupOne extends StatelessWidget {
+class SetupOne extends StatefulWidget {
   final VoidCallback onPressed;
   final Function(bool?) onChecked;
   final bool vatRegistered;
+  final Function({
+    String? userName, 
+    String? busName, 
+    int? number, 
+    String? userEmail,
+    String? vatRegistered,
+    int? vatNum, 
+    int? vatPercent,
+    int? recentInvoice,
+    String? streetAddress, 
+    String? city, 
+    String? suburb, 
+    int? postalCode,
+    String? bank, 
+    int? branchCode, 
+    int? bic,
+    int? accountNumber, 
+    String? theme, 
+    String? password, 
+  }) updateUser;
 
   const SetupOne({
     super.key, 
     required this.onPressed, 
     required this.onChecked, 
     required this.vatRegistered,
-  });
+    required this.updateUser,
+  });  
+
+  State<SetupOne> createState() => _SetupOneState();
+}
+
+class _SetupOneState extends State<SetupOne> {
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _busNameController = TextEditingController();
+  final TextEditingController _numberController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _invoiceController = TextEditingController();
+  final TextEditingController _vatNumberController = TextEditingController();
+  final TextEditingController _vatPercentageController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -34,27 +67,27 @@ class SetupOne extends StatelessWidget {
             ),
           ),
           SizedBox(
-            height: 10,
+            height: 20,
           ),
-          CustomTextInput(labelName: "Name *", hintText: "Name...",),
+          CustomTextInput(labelName: "Name *", hintText: "Name...", password: false, inputController: _nameController,),
           SizedBox(
-            height: 10,
+            height: 20,
           ),
-          CustomTextInput(labelName: "Bussiness Name", hintText: "Business Name..."),
+          CustomTextInput(labelName: "Bussiness Name", hintText: "Business Name...", password: false, inputController: _busNameController,),
           SizedBox(
-            height: 10,
+            height: 20,
           ),
-          CustomTextInput(labelName: "Phone Number *", hintText: "Phone Number..."),
+          CustomTextInput(labelName: "Phone Number *", hintText: "Phone Number...", password: false, inputController: _numberController,),
           SizedBox(
-            height: 10,
+            height: 20,
           ),
-          CustomTextInput(labelName: "Email *", hintText: "Email..."),
+          CustomTextInput(labelName: "Email *", hintText: "Email...", password: false, inputController: _emailController,),
           SizedBox(
-            height: 10,
+            height: 20,
           ),
-          CustomTextInput(labelName: "Most Recent Invoice Number *", hintText: "Invoice Number..."),
+          CustomTextInput(labelName: "Most Recent Invoice Number *", hintText: "Invoice Number...", password: false, inputController: _invoiceController,),
           SizedBox(
-            height: 10,
+            height: 20,
           ),
           SizedBox(
             width: 530,
@@ -77,8 +110,8 @@ class SetupOne extends StatelessWidget {
               ),
               checkboxShape: CircleBorder(),
               checkboxScaleFactor: 1.5,
-              value: vatRegistered,
-              onChanged: onChecked,
+              value: widget.vatRegistered,
+              onChanged: (value) => widget.onChecked(value ?? false),
               title: Text(
                 "Are you VAT Registered?",
                 style: TextStyle(
@@ -87,14 +120,24 @@ class SetupOne extends StatelessWidget {
               )
             ),
           ),
-          if(vatRegistered) SizedBox(
-            height: 10,
+          Visibility(
+            visible: widget.vatRegistered,
+            child: Column(
+              children: [
+                SizedBox(
+                  height: 20,
+                ),
+                CustomTextInput(labelName: "VAT Number *", hintText: "VAT Number...", password: false, inputController: _vatNumberController,),
+                SizedBox(
+                  height: 20,
+                ),
+                CustomTextInput(labelName: "VAT Percentage *", hintText: "VAT Percentage...", password: false, inputController: _vatPercentageController,),
+                SizedBox(
+                  height: 20,
+                ),
+              ],
+            )
           ),
-          if(vatRegistered) CustomTextInput(labelName: "VAT Number *", hintText: "VAT Number..."),
-          if(vatRegistered) SizedBox(
-            height: 10,
-          ),
-          if(vatRegistered) CustomTextInput(labelName: "Most Recent Invoice Number *", hintText: "Invoice Number..."),
           SizedBox(
             height: 20,
           ),
@@ -112,7 +155,18 @@ class SetupOne extends StatelessWidget {
                     horizontal: 30
                   )
                 ),
-                onPressed: onPressed, 
+                onPressed: () {
+                  widget.updateUser(
+                    userName: _nameController.text,
+                    busName: _busNameController.text,
+                    number: int.parse(_numberController.text),
+                    userEmail: _emailController.text,
+                    vatRegistered: widget.vatRegistered.toString(),
+                    vatNum: int.parse(_vatNumberController.text),
+                    vatPercent: int.parse(_vatPercentageController.text),
+                  );
+                  widget.onPressed();
+                }, 
                 child: Text(
                   "Next",
                   style: TextStyle(
@@ -122,7 +176,10 @@ class SetupOne extends StatelessWidget {
                 ),
               ),
             ),
-          )
+          ),
+          SizedBox(
+            height: 20,
+          ),
         ],
       ),
     );
