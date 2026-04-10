@@ -80,7 +80,13 @@ class AppDatabase {
         client_contact_number INTEGER,
         client_email TEXT,
         client_vatNumber INTEGER,
-        notes TEXT
+        client_street_address TEXT,
+        client_suburb TEXT,
+        client_city TEXT,
+        client_postal_code INTEGER,
+        notes TEXT,
+        status TEXT,
+        unpaid_invoices INTEGER
       )
       '''
     );

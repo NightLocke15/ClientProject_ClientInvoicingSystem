@@ -1,3 +1,5 @@
+import 'package:customer_timesheet_and_invoicing/features/clients/client_profile_page.dart';
+import 'package:customer_timesheet_and_invoicing/features/clients/clients_list_page.dart';
 import 'package:customer_timesheet_and_invoicing/features/timesheet/timesheet_page.dart';
 import 'package:flutter/material.dart';
 
@@ -12,12 +14,18 @@ class _HomePageState extends State<HomePage> {
   int pageIndex = 0;
   String pageTitle = "Timesheet";
 
-  void changePage(int pageNum, String pageName) {
+  String clickedClientID = '';
+
+  void changePage(int pageNum, String pageName, String clientid, bool drawerClosed) {
     setState(() {
       pageIndex = pageNum;
       pageTitle = pageName;
-    });    
-    Navigator.pop(context); 
+      clickedClientID = clientid;
+      debugPrint(clientid);
+    });   
+    if (!drawerClosed) {
+      Navigator.pop(context); 
+    }     
   }
 
   @override
@@ -28,10 +36,13 @@ class _HomePageState extends State<HomePage> {
         page = Timesheet();        
         break;
       case 1:
-        page = Timesheet();
+        page = Clients(onClientPressed: changePage);
         break;
       case 2: 
         page = Timesheet();        
+        break;
+      case 3: 
+        page = ClientProfile(clientID: clickedClientID);
         break;
       default:
         throw UnimplementedError('No page for selected index.');
@@ -65,19 +76,19 @@ class _HomePageState extends State<HomePage> {
           children: [
             ListTile(
               title: const Text('Home'),
-              onTap: () => changePage(0, "Timesheet"),
+              onTap: () => changePage(0, "Timesheet", "", false),
               textColor: Theme.of(context).textTheme.bodySmall?.color,
               hoverColor: Theme.of(context).primaryColorDark,
             ),
             ListTile(
               title: const Text('Clients'),
-              onTap: () => changePage(1, "Clients"),
+              onTap: () => changePage(1, "Clients", "", false),
               textColor: Theme.of(context).textTheme.bodySmall?.color,
               hoverColor: Theme.of(context).primaryColorDark,
             ),
             ListTile(
               title: const Text('Settings'),
-              onTap: () => changePage(2, "Settings"),
+              onTap: () => changePage(2, "Settings", "", false),
               textColor: Theme.of(context).textTheme.bodySmall?.color,
               hoverColor: Theme.of(context).primaryColorDark,
             ),              

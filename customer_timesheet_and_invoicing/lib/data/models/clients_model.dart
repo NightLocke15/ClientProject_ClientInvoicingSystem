@@ -5,7 +5,13 @@ class Client {
   final int clientContactNumber;
   final String clientEmail;
   final int clientVatNumber;
+  final String clientStreetAddress;
+  final String clientSuburb;
+  final String clientCity;
+  final int clientPostalCode;
   final String notes;
+  final String status;
+  final int unpaidInvoices;
 
   Client({
     required this.id,
@@ -14,7 +20,13 @@ class Client {
     required this.clientContactNumber,
     required this.clientEmail,
     required this.clientVatNumber,
+    required this.clientStreetAddress,
+    required this.clientSuburb,
+    required this.clientCity,
+    required this.clientPostalCode,
     required this.notes,
+    required this.status,
+    required this.unpaidInvoices,
   });
 
   Map<String, dynamic> toMap() {
@@ -25,7 +37,13 @@ class Client {
       'client_contact_number': clientContactNumber,
       'client_email': clientEmail,
       'client_vatNumber': clientVatNumber,
-      'notes': notes
+      'client_street_address': clientStreetAddress,
+      'client_suburb': clientSuburb,
+      'client_city': clientCity,
+      'client_postal_code': clientPostalCode,
+      'notes': notes,
+      'status': status,
+      'unpaid_invoices': unpaidInvoices,
     };
   }
 
@@ -37,7 +55,13 @@ class Client {
       clientContactNumber: map['client_contact_number'],
       clientEmail: map['client_email'],
       clientVatNumber: map['client_vatNumber'],
-      notes: map['notes']
+      clientStreetAddress: map['client_street_address'],
+      clientSuburb: map['client_suburb'],
+      clientCity: map['client_city'],
+      clientPostalCode: map['client_postal_code'],
+      notes: map['notes'],
+      status: map['status'],
+      unpaidInvoices: map['unpaid_invoices']
     );
   }
 }
