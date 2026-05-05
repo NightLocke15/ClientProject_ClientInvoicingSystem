@@ -1,5 +1,7 @@
 import 'package:customer_timesheet_and_invoicing/features/clients/client_profile_page.dart';
 import 'package:customer_timesheet_and_invoicing/features/clients/clients_list_page.dart';
+import 'package:customer_timesheet_and_invoicing/features/settings/edit_settings_page.dart';
+import 'package:customer_timesheet_and_invoicing/features/settings/settings_page.dart';
 import 'package:customer_timesheet_and_invoicing/features/timesheet/timesheet_page.dart';
 import 'package:flutter/material.dart';
 
@@ -21,7 +23,6 @@ class _HomePageState extends State<HomePage> {
       pageIndex = pageNum;
       pageTitle = pageName;
       clickedClientID = clientid;
-      debugPrint(clientid);
     });   
     if (!drawerClosed) {
       Navigator.pop(context); 
@@ -39,11 +40,13 @@ class _HomePageState extends State<HomePage> {
         page = Clients(onClientPressed: changePage);
         break;
       case 2: 
-        page = Timesheet();        
+        page = Settings(onEditPressed: changePage);        
         break;
       case 3: 
         page = ClientProfile(clientID: clickedClientID);
         break;
+      case 4:
+        page = EditSettings(onEditPressed: changePage);
       default:
         throw UnimplementedError('No page for selected index.');
     }

@@ -7,8 +7,9 @@ class ClientListItem extends StatefulWidget {
   final String clientStatus;
   final int unpaidInvoices;
   final Color rowColor;
-  final Function({String id}) deletFunc;
+  final Function(String id, bool delete) deletFunc;
   final Function({String id, String status}) statusFunc;
+  final Function(String id, bool edit) editFunc;
 
   const ClientListItem ({
     super.key,
@@ -19,6 +20,7 @@ class ClientListItem extends StatefulWidget {
     required this.rowColor,
     required this.deletFunc,
     required this.statusFunc,
+    required this.editFunc
   });
 
   State<ClientListItem> createState() => _ClientListItemState();
@@ -129,21 +131,41 @@ class _ClientListItemState extends State<ClientListItem> {
             ),
             Expanded(
               flex: 1,
-              child: Container(
-                padding: EdgeInsets.only(
-                  left: 8,
-                ),
-                child: IconButton(
-                  icon: Icon(
-                    Icons.delete_rounded,
-                    color: Color.fromARGB(255, 201, 3, 3),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Container(
+                    padding: EdgeInsets.only(
+                      left: 8,
+                      right: 8
+                    ),
+                    child: IconButton(
+                      icon: Icon(
+                        Icons.delete_rounded,
+                        color: Color.fromARGB(255, 201, 3, 3),
+                      ),
+                      onPressed: () {
+                        widget.deletFunc(widget.clientID, true);
+                      },
+                    ),
+                  ), 
+                  Container(
+                    padding: EdgeInsets.only(
+                      left: 8,
+                    ),
+                    child: IconButton(
+                      icon: Icon(
+                        Icons.edit_rounded,
+                        color: Theme.of(context).highlightColor,
+                      ),
+                      onPressed: () {
+                        widget.editFunc(widget.clientID, true);
+                      },
+                    ),
                   ),
-                  onPressed: () {
-                    widget.deletFunc(id: widget.clientID);
-                  },
-                ),
+                ],
               ),
-            ),            
+            )                        
           ],
         ),
       );

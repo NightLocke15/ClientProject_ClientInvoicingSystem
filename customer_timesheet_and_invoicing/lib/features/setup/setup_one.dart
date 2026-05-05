@@ -8,7 +8,7 @@ class SetupOne extends StatefulWidget {
   final Function({
     String? userName, 
     String? busName, 
-    int? number, 
+    String? number, 
     String? userEmail,
     String? vatRegistered,
     int? vatNum, 
@@ -45,6 +45,19 @@ class _SetupOneState extends State<SetupOne> {
   final TextEditingController _invoiceController = TextEditingController();
   final TextEditingController _vatNumberController = TextEditingController();
   final TextEditingController _vatPercentageController = TextEditingController();
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    _busNameController.dispose();
+    _numberController.dispose();
+    _emailController.dispose();
+    _invoiceController.dispose();
+    _vatNumberController.dispose();
+    _vatPercentageController.dispose();
+    super.dispose();
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -159,7 +172,7 @@ class _SetupOneState extends State<SetupOne> {
                   widget.updateUser(
                     userName: _nameController.text,
                     busName: _busNameController.text,
-                    number: int.parse(_numberController.text),
+                    number: _numberController.text,
                     userEmail: _emailController.text,
                     vatRegistered: widget.vatRegistered.toString(),
                     vatNum: int.parse(_vatNumberController.text),

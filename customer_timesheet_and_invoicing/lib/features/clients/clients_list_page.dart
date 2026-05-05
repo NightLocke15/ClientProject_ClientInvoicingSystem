@@ -13,6 +13,10 @@ class Clients extends StatefulWidget {
 
 class _ClientsState extends State<Clients> {
   bool addClient = false;
+  bool deleteBool = false;
+  bool editClient = false;
+
+  String selectedClientID = '';
 
   final clientServices = ClientCreationServices();
 
@@ -37,7 +41,6 @@ class _ClientsState extends State<Clients> {
 
   Future<void> loadClients() async {
     final result = await clientServices.getClients();
-    debugPrint(result.toString());
     setState(() {
       clientList = result;
     });
@@ -46,7 +49,7 @@ class _ClientsState extends State<Clients> {
   Future<void> addNewClient(
     String name, 
     String contactName, 
-    int number, 
+    String number, 
     String email, 
     int vatNum, 
     String address,
@@ -86,10 +89,74 @@ class _ClientsState extends State<Clients> {
     loadClients();
   }
 
+  Future<void> editClientInfo(
+    String? id,
+    String name, 
+    String contactPerson, 
+    String contactNum, 
+    String email, 
+    int vatNum, 
+    String address, 
+    String suburb, 
+    String city, 
+    int postalCode) async {
+    await clientServices.updateClient(id, {
+      'client_bus_name': name,
+      'client_contact_person': contactPerson,
+      'client_contact_number': contactNum,
+      'client_email': email,
+      'client_vatNumber': vatNum,
+      'client_street_address': address,
+      'client_suburb': suburb,
+      'client_city': city,
+      'client_postal_code': postalCode,
+    });
+    loadClients();
+  }
+
+  @override
+  void dispose() {
+    _clientNameController.dispose();
+    _contactNumberController.dispose();
+    _contactPersonController.dispose();
+    _vatNumberController.dispose();
+    _emailController.dispose();
+    _streetAddressController.dispose();
+    _suburbController.dispose();
+    _cityController.dispose();
+    _postalCodeController.dispose();
+    _searchController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     double screenHeight = MediaQuery.of(context).size.height;
     double screenWidth = MediaQuery.of(context).size.width;
+
+    void activateDelete(String id, bool delete) {
+      setState(() {
+        deleteBool = delete;
+        selectedClientID = id;
+      });
+    }
+
+    void activateEdit(String id, bool edit) async {
+      final result = await clientServices.getClient(id);
+      _clientNameController.text = result!["client_bus_name"];
+      _contactNumberController.text = result["client_contact_number"].toString();
+      _contactPersonController.text = result["client_contact_person"];
+      _vatNumberController.text = result["client_vatNumber"].toString();
+      _emailController.text = result["client_email"];
+      _streetAddressController.text = result["client_street_address"];
+      _suburbController.text = result["client_suburb"];
+      _cityController.text = result["client_city"];
+      _postalCodeController.text = result["client_postal_code"].toString();
+      setState(() {
+        editClient = edit;
+        selectedClientID = id;
+      });
+    }
 
     void clearControllers() {
       _clientNameController.clear();
@@ -153,10 +220,10 @@ class _ClientsState extends State<Clients> {
                               hintStyle: TextStyle(
                                 color: const Color.fromARGB(255, 104, 104, 104),
                               ),
-                              prefixIcon: Icon(
-                                Icons.search,
-                                color: Theme.of(context).highlightColor,
-                              ),
+                            // prefixIcon: Icon(
+                            //     Icons.search,
+                            //     color: Theme.of(context).highlightColor,
+                            //   ),
                             ),
                           ),
                         ),
@@ -317,9 +384,11 @@ class _ClientsState extends State<Clients> {
                               for (var client in clientList)
                                 InkWell(
                                   onTap: () {
-                                    widget.onClientPressed(3, client['client_bus_name'], client['id'], true);
+                                    if (client['status'] == "active") {
+                                      widget.onClientPressed(3, client['client_bus_name'], client['id'], true);
+                                    }                                    
                                   },
-                                  child: ClientListItem(clientName: client['client_bus_name'], clientID: client['id'], clientStatus: client['status'], unpaidInvoices: client['unpaid_invoices'], rowColor: Theme.of(context).primaryColor, deletFunc: deleteClient, statusFunc: updateClientStatus,),
+                                  child: ClientListItem(clientName: client['client_bus_name'], clientID: client['id'], clientStatus: client['status'], unpaidInvoices: client['unpaid_invoices'], rowColor: Theme.of(context).primaryColor, deletFunc: activateDelete, statusFunc: updateClientStatus, editFunc: activateEdit,),
                                 )
                             ],
                           ),
@@ -479,7 +548,7 @@ class _ClientsState extends State<Clients> {
                               addNewClient(
                                 _clientNameController.text, 
                                 _contactPersonController.text, 
-                                int.parse(_contactNumberController.text),
+                                _contactNumberController.text,
                                 _emailController.text, 
                                 int.parse(_vatNumberController.text), 
                                 _streetAddressController.text, 
@@ -517,7 +586,301 @@ class _ClientsState extends State<Clients> {
               ),
             ),
           ),
-        )
+        ),
+        Visibility(
+          visible: deleteBool,
+          child: Positioned(
+            child: Container(
+              decoration: BoxDecoration(
+                color: Theme.of(context).primaryColor.withValues(alpha: 0.8),
+              ),
+              padding: EdgeInsets.only(
+                top: screenHeight * 0.35,
+                bottom: screenHeight * 0.35,
+                left: screenWidth * 0.35,
+                right: screenWidth * 0.35,
+              ),
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Theme.of(context).primaryColor,
+                  borderRadius: BorderRadius.all(Radius.circular(10)),
+                  border: Border.all(
+                    color: const Color.fromARGB(255, 216, 19, 5),
+                    width: 2
+                  ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Theme.of(context).primaryColorDark.withValues(alpha: 0.8),
+                      spreadRadius: 3,
+                      blurRadius: 5,
+                      offset: Offset(0, 5) 
+                    )
+                  ]
+                ),
+                width: double.infinity,
+                child: Column(
+                  children: [
+                    Container(
+                      padding: EdgeInsets.only(
+                        top: 50
+                      ),
+                      child: Text(
+                        "Are you sure you want to delete this Client?",
+                        style: TextStyle(
+                          color: Theme.of(context).textTheme.bodySmall?.color,
+                          fontSize: 30,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                    SizedBox(height: 35,),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        ElevatedButton(
+                          onPressed: () {
+                            deleteClient(id: selectedClientID);
+                            deleteBool = false;
+                            selectedClientID = '';
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color.fromARGB(255, 218, 29, 15),
+                            foregroundColor: Theme.of(context).primaryColorDark,
+                            elevation: 5,
+                            padding: EdgeInsets.symmetric(
+                              vertical: 15,
+                              horizontal: 30
+                            )
+                          ),
+                          child: Text(
+                            "Delete",
+                            style: TextStyle(
+                              color: Theme.of(context).textTheme.bodySmall?.color,
+                              fontWeight: Theme.of(context).textTheme.bodySmall?.fontWeight,
+                              fontSize: 18,
+                            ),
+                          ),
+                        ),
+                        ElevatedButton(
+                          onPressed: () {
+                            setState(() {
+                              deleteBool = false;
+                              selectedClientID = '';
+                            });
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Theme.of(context).primaryColorLight,
+                            foregroundColor: Theme.of(context).primaryColorDark,
+                            elevation: 5,
+                            padding: EdgeInsets.symmetric(
+                              vertical: 15,
+                              horizontal: 30
+                            )
+                          ),
+                          child: Text(
+                            "Cancel",
+                            style: TextStyle(
+                              color: Theme.of(context).textTheme.bodySmall?.color,
+                              fontWeight: Theme.of(context).textTheme.bodySmall?.fontWeight,
+                              fontSize: 18,
+                            ),
+                          ),
+                        )
+                      ],
+                    )
+                  ],
+                ),
+              ),
+            )
+          ),
+        ),
+        Visibility(
+          visible: editClient,
+          child: Positioned(
+            child: Container(
+              decoration: BoxDecoration(
+                color: Theme.of(context).primaryColor.withValues(alpha: 0.8),
+              ),
+              padding: EdgeInsets.only(
+                top: screenHeight * 0.15,
+                bottom: screenHeight * 0.15,
+                left: screenWidth * 0.20,
+                right: screenWidth * 0.20,
+              ),
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Theme.of(context).primaryColor,
+                  borderRadius: BorderRadius.all(Radius.circular(10)),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Theme.of(context).primaryColorDark.withValues(alpha: 0.8),
+                      spreadRadius: 3,
+                      blurRadius: 5,
+                      offset: Offset(0, 5)
+                    )
+                  ]
+                ),
+                width: double.infinity,
+                child: Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        IconButton(
+                          icon: Icon(
+                            Icons.clear,
+                            color: Theme.of(context).textTheme.bodySmall?.color,
+                          ),
+                          onPressed: () {
+                            setState(() {
+                              editClient = false;
+                            });
+                            clearControllers();
+                          },
+                        )
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Container(
+                          padding: EdgeInsets.only(
+                            left: 20
+                          ),
+                          child: Text(
+                            "New Client",
+                            style: TextStyle(
+                              color: Theme.of(context).textTheme.bodySmall?.color,
+                              fontSize: 26,
+                              fontWeight: FontWeight.w400,
+                            ),
+                            textAlign: TextAlign.left,
+                          ),
+                        )
+                      ],
+                    ),
+                    SizedBox(height: 20,),
+                    Container(
+                      padding: EdgeInsets.only(
+                        left: 20,
+                        right: 20
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          CustomTextInput(labelName: "Client Name", hintText: "Client Name...", password: false, inputController: _clientNameController),
+                          CustomTextInput(labelName: "Street Address", hintText: "Street Address...", password: false, inputController: _streetAddressController),
+                        ],
+                      ),
+                    ),
+                    SizedBox(height: 20,),
+                    Container(
+                      padding: EdgeInsets.only(
+                        left: 20,
+                        right: 20
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          CustomTextInput(labelName: "Contact Person", hintText: "Contact Person...", password: false, inputController: _contactPersonController),
+                          CustomTextInput(labelName: "Suburb", hintText: "Suburb...", password: false, inputController: _suburbController),
+                        ],
+                      ),
+                    ),
+                    SizedBox(height: 20,),
+                    Container(
+                      padding: EdgeInsets.only(
+                        left: 20,
+                        right: 20
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          CustomTextInput(labelName: "Contact Number", hintText: "Contact Number...", password: false, inputController: _contactNumberController),
+                          CustomTextInput(labelName: "City", hintText: "City...", password: false, inputController: _cityController),
+                        ],
+                      ),
+                    ),
+                    SizedBox(height: 20,),
+                    Container(
+                      padding: EdgeInsets.only(
+                        left: 20,
+                        right: 20
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          CustomTextInput(labelName: "Email", hintText: "Email...", password: false, inputController: _emailController),
+                          CustomTextInput(labelName: "Postal Code", hintText: "Postal Code...", password: false, inputController: _postalCodeController),
+                        ],
+                      ),
+                    ),
+                    SizedBox(height: 20,),
+                    Container(
+                      padding: EdgeInsets.only(
+                        left: 20,
+                        right: 20
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          CustomTextInput(labelName: "VAT Number", hintText: "VAT Number...", password: false, inputController: _vatNumberController),
+                        ],
+                      ),
+                    ),
+                    SizedBox(height: 20,),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Container(
+                          padding: EdgeInsets.only(
+                            right: 20
+                          ),
+                          child: ElevatedButton(
+                            onPressed: () {
+                              editClientInfo(
+                                selectedClientID,
+                                _clientNameController.text, 
+                                _contactPersonController.text, 
+                                _contactNumberController.text,
+                                _emailController.text, 
+                                int.parse(_vatNumberController.text), 
+                                _streetAddressController.text, 
+                                _suburbController.text, 
+                                _cityController.text, 
+                                int.parse(_postalCodeController.text)
+                              );
+                              setState(() {
+                                editClient = false;
+                              });
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Theme.of(context).primaryColorLight,
+                              foregroundColor: Theme.of(context).primaryColorDark,
+                              elevation: 5,
+                              padding: EdgeInsets.symmetric(
+                                vertical: 15,
+                                horizontal: 30
+                              )
+                            ),
+                            child: Text(
+                              "Done",
+                              style: TextStyle(
+                                color: Theme.of(context).textTheme.bodySmall?.color,
+                                fontWeight: Theme.of(context).textTheme.bodySmall?.fontWeight,
+                                fontSize: 18
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    )
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
       ],
     );
   }

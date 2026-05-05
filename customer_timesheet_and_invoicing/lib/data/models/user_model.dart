@@ -2,9 +2,9 @@ class User {
   final int? id;
   final String name;
   final String businessName;
-  final int number;
+  final String number;
   final String email;
-  final int vatRegistered;
+  final String vatRegistered;
   final String vatNumber;
   final int vatPercentage;
   final int recentInvoice;

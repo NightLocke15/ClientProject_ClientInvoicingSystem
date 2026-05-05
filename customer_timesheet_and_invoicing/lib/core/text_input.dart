@@ -52,11 +52,18 @@ class CustomTextInput extends StatelessWidget {
                 decoration: InputDecoration(
                   fillColor: Theme.of(context).primaryColor,
                   filled: true,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(30)),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(20)),
                     borderSide: BorderSide(
-                      color: Color.fromRGBO(103, 103, 103, 1),
-                      width: 4.0,
+                      color: Theme.of(context).primaryColorLight,
+                      width: 1.0,
+                    )
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(20)),
+                    borderSide: BorderSide(
+                      color: Theme.of(context).highlightColor,
+                      width: 1.0,
                     )
                   ),
                   hintText: hintText,

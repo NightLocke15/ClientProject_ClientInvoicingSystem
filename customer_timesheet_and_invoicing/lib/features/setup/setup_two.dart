@@ -6,7 +6,7 @@ class SetupTwo extends StatefulWidget {
   final Function({
     String? userName, 
     String? busName, 
-    int? number, 
+    String? number, 
     String? userEmail,
     String? vatRegistered,
     int? vatNum, 
@@ -42,6 +42,19 @@ class _SetupTwoState extends State<SetupTwo> {
   final TextEditingController _branchCodeController = TextEditingController();
   final TextEditingController _bicController = TextEditingController();
   final TextEditingController _accountNumberController = TextEditingController();
+
+  @override
+  void dispose() {
+    _streetController.dispose();
+    _cityController.dispose();
+    _suburbController.dispose();
+    _postalCodeController.dispose();
+    _bankController.dispose();
+    _branchCodeController.dispose();
+    _bicController.dispose();
+    _accountNumberController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {

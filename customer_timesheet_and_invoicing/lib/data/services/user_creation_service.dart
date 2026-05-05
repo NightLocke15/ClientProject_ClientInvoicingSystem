@@ -16,4 +16,14 @@ class UserProfileServices {
     final result = await db.query('user_profile', where: 'id = ?', whereArgs: [1]);
     return result.isNotEmpty ? result.first : null;
   }
+
+  Future<int> updateUser(Map<String, dynamic> values) async {
+    final db = await AppDatabase.instance.database;
+    return await db.update(
+      'user_profile',
+      values,
+      where: 'id = ?',
+      whereArgs: [1],
+    );
+  }
 }

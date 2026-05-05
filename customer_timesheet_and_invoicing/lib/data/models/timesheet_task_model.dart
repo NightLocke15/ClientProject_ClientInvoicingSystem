@@ -4,8 +4,7 @@ class TimesheetTask {
   final String posFK;
   final String clientFK;
   final String date;
-  final String startTime;
-  final String endTime;
+  final String hours;
   final String paid;
 
   TimesheetTask({
@@ -14,8 +13,7 @@ class TimesheetTask {
     required this.posFK,
     required this.clientFK,
     required this.date,
-    required this.startTime,
-    required this.endTime,
+    required this.hours,
     required this.paid,
   });
 
@@ -26,8 +24,7 @@ class TimesheetTask {
       'pos_fk': posFK,
       'client_fk': clientFK,
       'date': date,
-      'start_time': startTime,
-      'end_time': endTime,
+      'hours': hours,
       'paid': paid,
     };
   }
@@ -39,8 +36,7 @@ class TimesheetTask {
       posFK: map['pos_fk'],
       clientFK: map['client_fk'],
       date: map['date'],
-      startTime: map['start_time'],
-      endTime: map['end_time'],
+      hours: map['hours'],
       paid: map['paid'],
     );
   }

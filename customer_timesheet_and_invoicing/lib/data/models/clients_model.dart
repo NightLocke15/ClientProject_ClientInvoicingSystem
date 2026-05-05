@@ -2,7 +2,7 @@ class Client {
   final String id;
   final String clientBusName;
   final String clientContactPerson;
-  final int clientContactNumber;
+  final String clientContactNumber;
   final String clientEmail;
   final int clientVatNumber;
   final String clientStreetAddress;

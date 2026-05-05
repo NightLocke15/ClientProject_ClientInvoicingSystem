@@ -35,7 +35,7 @@ class AppDatabase {
         id INTEGER PRIMARY KEY,
         name TEXT,
         business_name TEXT,
-        number INTEGER,
+        number STRING,
         email TEXT,
         recent_invoice INTEGER,
         vat_registered TEXT,
@@ -77,7 +77,7 @@ class AppDatabase {
         id TEXT PRIMARY KEY,
         client_bus_name TEXT,
         client_contact_person TEXT,
-        client_contact_number INTEGER,
+        client_contact_number STRING,
         client_email TEXT,
         client_vatNumber INTEGER,
         client_street_address TEXT,
@@ -99,12 +99,11 @@ class AppDatabase {
         pos_fk TEXT,
         client_fk TEXT,
         date TEXT,
-        start_time TEXT,
-        end_time TEXT,
+        hours INTEGER,
         paid TEXT,
         FOREIGN KEY (task_fk) REFERENCES tasks(task),
         FOREIGN KEY (pos_fk) REFERENCES purchase_order_numbers(pos),
-        FOREIGN KEY (client_fk) REFERENCES clients(id)
+        FOREIGN KEY (client_fk) REFERENCES clients(client_bus_name)
       )
       '''
     );

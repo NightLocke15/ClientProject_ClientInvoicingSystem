@@ -7,7 +7,7 @@ class SetupThree extends StatefulWidget {
   final Function({
     String? userName, 
     String? busName, 
-    int? number, 
+    String? number, 
     String? userEmail,
     String? vatRegistered,
     int? vatNum, 
@@ -41,6 +41,13 @@ class _SetupThreeState extends State<SetupThree> {
   String hashPassword(String pass) {
     final hashed = BCrypt.hashpw(pass, BCrypt.gensalt());
     return hashed;
+  }
+
+  @override
+  void dispose() {
+    _passwordController.dispose();
+    _confirmPasswordController.dispose();
+    super.dispose();
   }
 
   @override

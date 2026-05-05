@@ -22,7 +22,7 @@ class _SetupPageState extends State<SetupPage> {
   void updateUserDraft({
     String? userName, 
     String? busName, 
-    int? number, 
+    String? number, 
     String? userEmail,
     String? vatRegistered,
     int? vatNum, 
@@ -197,7 +197,7 @@ class UserDraft {
   int? id;
   String? name;
   String? businessName;
-  int? number;
+  String? number;
   String? email;
   String? vatRegistered;
   int? vatNumber;
